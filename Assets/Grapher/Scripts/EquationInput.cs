@@ -48,29 +48,40 @@ namespace Grapher
             if (!leftX && !leftY) return false;
             if (!rightX && !rightY) return false;
 
-            if (!IsValue(left[0]) || !IsValue(left[left.Length - 1])) return false;
-            if (!IsValue(right[0]) || !IsValue(right[right.Length - 1])) return false;
+            if (IsOperator(left[0]) || IsOperator(left[left.Length - 1])) return false;
+            if (IsOperator(right[0]) || IsOperator(right[right.Length - 1])) return false;
 
-            if (ContainsConsecutiveNonValues(left)) return false;
-            if (ContainsConsecutiveNonValues(right)) return false;
+            if (!HasValidConsecutives(left)) return false;
+            if (!HasValidConsecutives(right)) return false;
 
             return true;
         }
 
-        private bool ContainsConsecutiveNonValues(string str)
+        private bool HasValidConsecutives(string str)
         {
-            for (int i = 0; i < str.Length - 2; i++)
+            for (int i = 0; i < str.Length - 1; i++)
             {
-                if (!IsValue(str[i]) && !IsValue(str[i + 1])) return true;
+                char chA = str[i];
+                char chB = str[i + 1];
+                if (IsOperator(chA) && IsOperator(chB)) return false;
+                if (IsVariable(chA) && IsNumber(chB)) return false;
             }
-            return false;
+            return true;
         }
 
-        private bool IsValue(char ch)
+        private bool IsOperator(char ch)
         {
-            if (char.IsNumber(ch)) return true;
-            if (ch == 'x' || ch == 'y') return true;
-            return false;
+            return !IsNumber(ch) && !IsVariable(ch);
+        }
+
+        private bool IsNumber(char ch)
+        {
+            return char.IsNumber(ch);
+        }
+
+        private bool IsVariable(char ch)
+        {
+            return ch == 'x' || ch == 'y';
         }
     }
 }
