@@ -21,9 +21,19 @@ namespace Grapher
         {
             string equation = input.text;
 
-            if (IsValidEquation(equation)) equationGrapher.GraphEquation(equation);
+            if (IsValidEquation(equation))
+            {
+                string cleanEquation = CleanEquation(equation);
+                equationGrapher.GraphEquation(cleanEquation);
+            }
             else equationGrapher.ClearEquation();
-            // equationGrapher.GraphEquation(equation);
+        }
+
+        private string CleanEquation(string equation)
+        {
+            string[] sides = equation.Split('=');
+            if (!sides[0].Contains('x')) return $"{sides[1]}={sides[0]}";
+            else return equation;
         }
 
         private bool IsValidEquation(string equation)
@@ -48,8 +58,8 @@ namespace Grapher
             if (!leftX && !leftY) return false;
             if (!rightX && !rightY) return false;
 
-            if (IsOperator(left[0]) || IsOperator(left[left.Length - 1])) return false;
-            if (IsOperator(right[0]) || IsOperator(right[right.Length - 1])) return false;
+            if (Operation.IsOperator(left[0]) || Operation.IsOperator(left[left.Length - 1])) return false;
+            if (Operation.IsOperator(right[0]) || Operation.IsOperator(right[right.Length - 1])) return false;
 
             if (!HasValidConsecutives(left)) return false;
             if (!HasValidConsecutives(right)) return false;
@@ -63,25 +73,10 @@ namespace Grapher
             {
                 char chA = str[i];
                 char chB = str[i + 1];
-                if (IsOperator(chA) && IsOperator(chB)) return false;
-                if (IsVariable(chA) && IsNumber(chB)) return false;
+                if (Operation.IsOperator(chA) && Operation.IsOperator(chB)) return false;
+                if (Operation.IsVariable(chA) && Operation.IsNumber(chB)) return false;
             }
             return true;
-        }
-
-        private bool IsOperator(char ch)
-        {
-            return !IsNumber(ch) && !IsVariable(ch);
-        }
-
-        private bool IsNumber(char ch)
-        {
-            return char.IsNumber(ch);
-        }
-
-        private bool IsVariable(char ch)
-        {
-            return ch == 'x' || ch == 'y';
         }
     }
 }

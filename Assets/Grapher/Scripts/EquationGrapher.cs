@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Grapher
@@ -52,13 +53,48 @@ namespace Grapher
         {
             float y = x;
 
-            // bool leftX = false;
-            // string[] sides = equation.Split('=');
-            // if (sides[0].Contains('x')) leftX = true;
+            string[] sides = equation.Split('=');
+            
+            string left = sides[0];
+            string right = sides[1];
+            
+            string[] leftValues = GetValues(left);
+            char[] leftOperators = GetOperators(left);
+            string[] rightValues = GetValues(right);
+            char[] rightOperators = GetOperators(right);
 
-            // if (leftX)
+            // for ()
 
             return y;
+        }
+
+        private string[] GetValues(string str)
+        {
+            string newStr = str;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                char ch = str[i];
+                if (Operation.IsOperator(ch))
+                {
+                    newStr = Operation.ReplaceChar(newStr, i, '#');
+                }
+            }
+
+            return newStr.Split('#');
+        }
+
+        private char[] GetOperators(string str)
+        {
+            List<char> operators = new List<char>();
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                char ch = str[i];
+                if (Operation.IsOperator(ch)) operators.Add(ch);
+            }
+
+            return operators.ToArray();
         }
     }
 }
