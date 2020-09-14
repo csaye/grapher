@@ -22,6 +22,8 @@ namespace Grapher
             string equation = input.text;
 
             if (IsValidEquation(equation)) equationGrapher.GraphEquation(equation);
+            else equationGrapher.ClearEquation();
+            // equationGrapher.GraphEquation(equation);
         }
 
         private bool IsValidEquation(string equation)
@@ -30,19 +32,45 @@ namespace Grapher
             
             if (sides.Length != 2) return false;
 
-            if (string.IsNullOrEmpty(sides[0])) return false;
-            if (string.IsNullOrEmpty(sides[1])) return false;
+            string left = sides[0];
+            string right = sides[1];
 
-            bool leftX = sides[0].Contains('x');
-            bool leftY = sides[0].Contains('y');
-            bool rightX = sides[1].Contains('x');
-            bool rightY = sides[1].Contains('y');
+            if (string.IsNullOrEmpty(left)) return false;
+            if (string.IsNullOrEmpty(right)) return false;
+
+            bool leftX = left.Contains('x');
+            bool leftY = left.Contains('y');
+            bool rightX = right.Contains('x');
+            bool rightY = right.Contains('y');
 
             if (leftX && leftY) return false;
             if (rightX && rightY) return false;
-            if (!leftX && !leftY && !rightX && !rightY) return false;
+            if (!leftX && !leftY) return false;
+            if (!rightX && !rightY) return false;
+
+            if (!IsValue(left[0]) || !IsValue(left[left.Length - 1])) return false;
+            if (!IsValue(right[0]) || !IsValue(right[right.Length - 1])) return false;
+
+            if (ContainsConsecutiveNonValues(left)) return false;
+            if (ContainsConsecutiveNonValues(right)) return false;
 
             return true;
+        }
+
+        private bool ContainsConsecutiveNonValues(string str)
+        {
+            for (int i = 0; i < str.Length - 2; i++)
+            {
+                if (!IsValue(str[i]) && !IsValue(str[i + 1])) return true;
+            }
+            return false;
+        }
+
+        private bool IsValue(char ch)
+        {
+            if (char.IsNumber(ch)) return true;
+            if (ch == 'x' || ch == 'y') return true;
+            return false;
         }
     }
 }

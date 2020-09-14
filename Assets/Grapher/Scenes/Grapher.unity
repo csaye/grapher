@@ -402,6 +402,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db01034cbb86f4f2db79ba36962bb571, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftX: -5
+  rightX: 5
+  pointPrefab: {fileID: 6759193098379951215, guid: 547f1288efd4b47e6984e6f2fc1e873f,
+    type: 3}
 --- !u!1 &981861989
 GameObject:
   m_ObjectHideFlags: 0
