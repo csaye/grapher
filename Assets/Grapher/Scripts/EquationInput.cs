@@ -23,17 +23,31 @@ namespace Grapher
 
             if (IsValidEquation(equation))
             {
-                string cleanEquation = CleanEquation(equation);
-                equationGrapher.GraphEquation(cleanEquation);
+                string formattedEquation = FormatEquation(equation);
+                equationGrapher.GraphEquation(formattedEquation);
             }
             else equationGrapher.ClearEquation();
         }
 
-        private string CleanEquation(string equation)
+        private string FormatEquation(string equation)
         {
-            string[] sides = equation.Split('=');
+            string newEquation = equation;
+            int length = newEquation.Length - 1;
+            
+            for (int i = 0; i < length; i++)
+            {
+                char chA = newEquation[i];
+                char chB = newEquation[i + 1];
+                if (Operation.IsNumber(chA) && Operation.IsVariable(chB))
+                {
+                    newEquation = Operation.InsertChar(newEquation, i + 1, '*');
+                    length++;
+                }
+            }
+            
+            string[] sides = newEquation.Split('=');
             if (!sides[0].Contains('x')) return $"{sides[1]}={sides[0]}";
-            else return equation;
+            else return newEquation;
         }
 
         private bool IsValidEquation(string equation)

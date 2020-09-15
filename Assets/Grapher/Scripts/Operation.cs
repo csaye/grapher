@@ -17,6 +17,13 @@
             return ch == 'x' || ch == 'y';
         }
 
+        public static string InsertChar(string str, int index, char ch)
+        {
+            string str1 = str.Substring(0, index);
+            string str2 = str.Substring(index);
+            return $"{str1}{ch}{str2}";
+        }
+
         public static string ReplaceChar(string str, int index, char ch)
         {
             string str1 = str.Substring(0, index);

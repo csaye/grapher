@@ -735,7 +735,7 @@ MonoBehaviour:
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 6
-  m_RegexValue: '[0-9yx=*/+-]'
+  m_RegexValue: '[0-9yx=*+]'
   m_GlobalPointSize: 36
   m_CharacterLimit: 0
   m_OnEndEdit:

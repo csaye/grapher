@@ -13,17 +13,19 @@ namespace Grapher
         [Header("References")]
         [SerializeField] private GameObject pointPrefab = null;
         
-        private const int increments = 20;
+        private const int increments = 100;
 
         private GameObject[] points = new GameObject[increments];
 
         private void Start()
         {
             float xIncrement = (rightX - leftX) / increments;
+            float x = leftX;
             int index = 0;
 
-            for (float x = leftX; x < rightX; x += xIncrement)
+            for (int i = 0; i < increments; i++)
             {
+                x += xIncrement;
                 Vector3 pointPosition = new Vector3(x, 0, 0);
                 GameObject pointObj = Instantiate(pointPrefab, pointPosition, Quaternion.identity, transform);
                 pointObj.SetActive(false);
@@ -45,14 +47,11 @@ namespace Grapher
 
         public void ClearEquation()
         {
-            Debug.Log("clearing");
             foreach (GameObject point in points) point.SetActive(false);
         }
 
         private float SolveForY(float x, string equation)
         {
-            float y = x;
-
             string[] sides = equation.Split('=');
             
             string left = sides[0];
@@ -63,9 +62,52 @@ namespace Grapher
             string[] rightValues = GetValues(right);
             char[] rightOperators = GetOperators(right);
 
-            // for ()
+            if (left == "x" && right == "y") return x;
 
-            return y;
+            if (right == "y")
+            {
+                float newX = x;
+
+                for (int i = 0; i < leftOperators.Length; i++)
+                {
+                    char ch = leftOperators[i];
+
+                    int charIndex = 0;
+                    for (int j = 0; j <= i; j++) charIndex += leftValues[j].Length;
+                    for (int j = 0; j < i; j++) charIndex += 1;
+                    // Debug.Log($"index of char {ch} is {charIndex}");
+
+                    if (ch == '*')
+                    {
+                        string leftValue = leftValues[i];
+                        string rightValue = leftValues[i + 1];
+                        if (Operation.IsVariable(leftValue[0]))
+                        {
+                            newX *= int.Parse(rightValue);
+                            string newEquation = $"{equation.Substring(0, charIndex)}{equation.Substring(charIndex + rightValue.Length + 1)}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else
+                        {
+                            newX *= int.Parse(leftValue);
+                            string newEquation = $"{equation.Substring(0, charIndex - leftValue.Length)}{equation.Substring(charIndex + 1)}";
+                            return SolveForY(newX, newEquation);
+                        }
+                    }
+                }
+            }
+
+            return -1;
+
+            // for (int i = 0; i < leftOperators; i++)
+            // {
+            //     char ch = leftOperators[i];
+
+            //     if (ch == '*')
+            //     {
+
+            //     }
+            // }
         }
 
         private string[] GetValues(string str)
