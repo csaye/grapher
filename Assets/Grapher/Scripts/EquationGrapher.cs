@@ -82,7 +82,7 @@ namespace Grapher
                         string rightValue = leftValues[i + 1];
                         if (Operation.IsVariable(leftValue[0]))
                         {
-                            newX *= int.Parse(rightValue);
+                            newX *= float.Parse(rightValue);
                             string partA = equation.Substring(0, charIndex);
                             string partB = equation.Substring(charIndex + rightValue.Length + 1);
                             string newEquation = $"{partA}{partB}";
@@ -90,7 +90,7 @@ namespace Grapher
                         }
                         else if (Operation.IsVariable(rightValue[0]))
                         {
-                            newX *= int.Parse(leftValue);
+                            newX *= float.Parse(leftValue);
                             string partA = equation.Substring(0, charIndex - leftValue.Length);
                             string partB = equation.Substring(charIndex + 1);
                             string newEquation = $"{partA}{partB}";
@@ -98,7 +98,37 @@ namespace Grapher
                         }
                         else
                         {
-                            int newValue = int.Parse(leftValue) * int.Parse(rightValue);
+                            float newValue = float.Parse(leftValue) * float.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{newValue}{partB}";
+                            Debug.Log(newEquation);
+                            return SolveForY(x, newEquation);
+                        }
+                    }
+                    if (ch == '/')
+                    {
+                        string leftValue = leftValues[i];
+                        string rightValue = leftValues[i + 1];
+                        if (Operation.IsVariable(leftValue[0]))
+                        {
+                            newX /= float.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{partB}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else if (Operation.IsVariable(rightValue[0]))
+                        {
+                            newX = newX == 0 ? 0 : float.Parse(leftValue) / newX;
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + 1);
+                            string newEquation = $"{partA}{partB}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else
+                        {
+                            float newValue = float.Parse(leftValue) / float.Parse(rightValue);
                             string partA = equation.Substring(0, charIndex - leftValue.Length);
                             string partB = equation.Substring(charIndex + rightValue.Length + 1);
                             string newEquation = $"{partA}{newValue}{partB}";
@@ -122,7 +152,7 @@ namespace Grapher
                         string rightValue = leftValues[i + 1];
                         if (Operation.IsVariable(leftValue[0]))
                         {
-                            newX += int.Parse(rightValue);
+                            newX += float.Parse(rightValue);
                             string partA = equation.Substring(0, charIndex);
                             string partB = equation.Substring(charIndex + rightValue.Length + 1);
                             string newEquation = $"{partA}{partB}";
@@ -130,7 +160,7 @@ namespace Grapher
                         }
                         else if (Operation.IsVariable(rightValue[0]))
                         {
-                            newX += int.Parse(leftValue);
+                            newX += float.Parse(leftValue);
                             string partA = equation.Substring(0, charIndex - leftValue.Length);
                             string partB = equation.Substring(charIndex + 1);
                             string newEquation = $"{partA}{partB}";
@@ -138,7 +168,37 @@ namespace Grapher
                         }
                         else
                         {
-                            int newValue = int.Parse(leftValue) + int.Parse(rightValue);
+                            float newValue = float.Parse(leftValue) + float.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{newValue}{partB}";
+                            Debug.Log(newEquation);
+                            return SolveForY(x, newEquation);
+                        }
+                    }
+                    if (ch == '-')
+                    {
+                        string leftValue = leftValues[i];
+                        string rightValue = leftValues[i + 1];
+                        if (Operation.IsVariable(leftValue[0]))
+                        {
+                            newX -= float.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{partB}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else if (Operation.IsVariable(rightValue[0]))
+                        {
+                            newX = float.Parse(leftValue) - newX;
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + 1);
+                            string newEquation = $"{partA}{partB}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else
+                        {
+                            float newValue = float.Parse(leftValue) - float.Parse(rightValue);
                             string partA = equation.Substring(0, charIndex - leftValue.Length);
                             string partB = equation.Substring(charIndex + rightValue.Length + 1);
                             string newEquation = $"{partA}{newValue}{partB}";

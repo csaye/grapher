@@ -93,6 +93,7 @@ namespace Grapher
                 char chB = str[i + 1];
                 if (Operation.IsOperator(chA) && Operation.IsOperator(chB)) return false;
                 if (Operation.IsVariable(chA) && Operation.IsNumber(chB)) return false;
+                if (chA == '/' && chB == '0') return false;
             }
             return true;
         }
