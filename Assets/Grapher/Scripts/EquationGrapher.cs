@@ -75,7 +75,6 @@ namespace Grapher
                     int charIndex = 0;
                     for (int j = 0; j <= i; j++) charIndex += leftValues[j].Length;
                     for (int j = 0; j < i; j++) charIndex += 1;
-                    // Debug.Log($"index of char {ch} is {charIndex}");
 
                     if (ch == '*')
                     {
@@ -84,14 +83,67 @@ namespace Grapher
                         if (Operation.IsVariable(leftValue[0]))
                         {
                             newX *= int.Parse(rightValue);
-                            string newEquation = $"{equation.Substring(0, charIndex)}{equation.Substring(charIndex + rightValue.Length + 1)}";
+                            string partA = equation.Substring(0, charIndex);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{partB}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else if (Operation.IsVariable(rightValue[0]))
+                        {
+                            newX *= int.Parse(leftValue);
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + 1);
+                            string newEquation = $"{partA}{partB}";
                             return SolveForY(newX, newEquation);
                         }
                         else
                         {
-                            newX *= int.Parse(leftValue);
-                            string newEquation = $"{equation.Substring(0, charIndex - leftValue.Length)}{equation.Substring(charIndex + 1)}";
+                            int newValue = int.Parse(leftValue) * int.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{newValue}{partB}";
+                            Debug.Log(newEquation);
+                            return SolveForY(x, newEquation);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < leftOperators.Length; i++)
+                {
+                    char ch = leftOperators[i];
+
+                    int charIndex = 0;
+                    for (int j = 0; j <= i; j++) charIndex += leftValues[j].Length;
+                    for (int j = 0; j < i; j++) charIndex += 1;
+
+                    if (ch == '+')
+                    {
+                        string leftValue = leftValues[i];
+                        string rightValue = leftValues[i + 1];
+                        if (Operation.IsVariable(leftValue[0]))
+                        {
+                            newX += int.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{partB}";
                             return SolveForY(newX, newEquation);
+                        }
+                        else if (Operation.IsVariable(rightValue[0]))
+                        {
+                            newX += int.Parse(leftValue);
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + 1);
+                            string newEquation = $"{partA}{partB}";
+                            return SolveForY(newX, newEquation);
+                        }
+                        else
+                        {
+                            int newValue = int.Parse(leftValue) + int.Parse(rightValue);
+                            string partA = equation.Substring(0, charIndex - leftValue.Length);
+                            string partB = equation.Substring(charIndex + rightValue.Length + 1);
+                            string newEquation = $"{partA}{newValue}{partB}";
+                            Debug.Log(newEquation);
+                            return SolveForY(x, newEquation);
                         }
                     }
                 }

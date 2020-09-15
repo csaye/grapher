@@ -71,6 +71,10 @@ namespace Grapher
             if (rightX && rightY) return false;
             if (!leftX && !leftY) return false;
             if (!rightX && !rightY) return false;
+            if (leftX && rightX) return false;
+            if (leftY && rightY) return false;
+            if (!leftX && !rightX) return false;
+            if (!leftY && !rightY) return false;
 
             if (Operation.IsOperator(left[0]) || Operation.IsOperator(left[left.Length - 1])) return false;
             if (Operation.IsOperator(right[0]) || Operation.IsOperator(right[right.Length - 1])) return false;
